@@ -423,7 +423,7 @@ video.load();
 bar.style.width="0%";
 time.innerHTML="00:00 / 00:00";
 playButton.innerHTML="▶";
-document.getElementById("episode").innerHTML="Episode 4";
+document.getElementById("episode").innerHTML="This is the end of the simulation";
 document.getElementById("reflection").style.display="none";
 return;
 }
