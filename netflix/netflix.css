@@ -1,0 +1,421 @@
+body{
+
+margin:0;
+
+overflow:hidden;
+
+background:#141414;
+
+color:white;
+
+font-family:Arial;
+
+}
+
+.logo{
+
+position:absolute;
+
+top:25px;
+
+left:40px;
+
+z-index:20;
+
+font-size:48px;
+
+color:#E50914;
+
+margin:0;
+
+}
+
+
+.video-container{
+
+position:relative;
+
+width:100vw;
+
+height:100vh;
+
+overflow:hidden;
+
+}
+
+
+video{
+
+width:100%;
+
+height:100%;
+
+object-fit:cover;
+
+display:block;
+
+background:black;
+
+}
+
+
+.controls{
+
+position:absolute;
+
+bottom:0;
+
+left:0;
+
+width:100%;
+
+padding:25px 35px;
+
+background:linear-gradient(
+transparent,
+rgba(0,0,0,0.9)
+);
+
+display:flex;
+
+align-items:center;
+
+gap:20px;
+
+box-sizing:border-box;
+
+}
+
+
+
+.control-btn,
+.play-btn{
+
+border:none;
+
+background:rgba(255,255,255,0.08);
+
+backdrop-filter:blur(12px);
+
+color:white;
+
+cursor:pointer;
+
+transition:.25s;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+}
+
+
+.play-btn{
+
+width:70px;
+height:70px;
+
+border-radius:50%;
+
+font-size:34px;
+
+}
+
+
+.control-btn{
+
+width:55px;
+height:55px;
+
+border-radius:50%;
+
+font-size:20px;
+
+}
+
+
+.control-btn:hover,
+.play-btn:hover{
+
+background:#e50914;
+
+transform:scale(1.08);
+
+}
+
+.progress{
+
+flex:1;
+
+height:5px;
+
+background:#444;
+
+border-radius:20px;
+
+overflow:hidden;
+
+cursor:pointer;
+
+}
+
+#bar{
+
+height:100%;
+
+background:#e50914;
+
+transition:.15s linear;
+
+}
+
+
+
+#breakPopup{
+
+display:none;
+
+position:fixed;
+
+top:25px;
+
+right:25px;
+
+width:300px;
+
+padding:20px;
+
+border-radius:18px;
+
+background:rgba(35,35,35,.95);
+
+backdrop-filter:blur(18px);
+
+color:white;
+
+box-shadow:0 10px 30px rgba(0,0,0,.45);
+
+animation:slideIn .4s;
+
+z-index:999;
+
+}
+@keyframes slideIn{
+
+from{
+
+transform:translateX(350px);
+
+opacity:0;
+
+}
+
+to{
+
+transform:translateX(0);
+
+opacity:1;
+
+}
+
+}
+
+#breakOverlay{
+
+display:none;
+
+position:fixed;
+
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+backdrop-filter:blur(12px);
+
+background:rgba(0,0,0,0.55);
+
+z-index:999;
+
+justify-content:center;
+
+align-items:center;
+
+}
+
+
+#countdown{
+
+font-size:90px;
+
+font-weight:bold;
+
+color:white;
+
+}
+
+#reflection{
+
+display:none;
+
+position:fixed;
+
+top:10%;
+
+left:25%;
+
+width:50%;
+
+background:#222;
+
+padding:30px;
+
+border-radius:20px;
+
+z-index:20;
+
+animation:pop .35s ease;
+
+}
+
+
+#reflection img{
+
+width:200px;
+
+}
+#closeBreak{
+
+position:absolute;
+
+top:10px;
+
+right:15px;
+
+font-size:22px;
+
+cursor:pointer;
+
+}
+
+
+@keyframes pop{
+
+0%{
+
+opacity:0;
+
+transform:scale(.85);
+
+}
+
+100%{
+
+opacity:1;
+
+transform:scale(1);
+
+}
+
+}
+#episode{
+
+position:absolute;
+
+bottom:130px;
+
+left:40px;
+
+z-index:20;
+
+font-size:38px;
+
+margin:0;
+
+}
+#mirrorContainer{
+
+display:none;
+
+position:fixed;
+
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+z-index:50;
+
+}
+
+
+#mirrorContainer iframe{
+
+width:100%;
+height:100%;
+
+border:none;
+
+}
+/* Calm dorm palette for the 20-second reset prompt. */
+#breakPopup {
+  font-family: Georgia, serif;
+  line-height: 1.5;
+  color: #f1eadc;
+  background: linear-gradient(145deg, rgba(67, 70, 63, .97), rgba(37, 45, 45, .98));
+  border: 1px solid rgba(229, 214, 184, .30);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, .34), inset 0 1px 0 rgba(255, 255, 255, .08);
+}
+.break-title { display: block; margin: 2px 24px 12px 0; color: #f0dfbd; font-size: 18px; font-weight: 500; line-height: 1.3; }
+#breakPopup::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 20px;
+  right: 20px;
+  height: 2px;
+  border-radius: 0 0 3px 3px;
+  background: linear-gradient(90deg, rgba(232, 205, 150, .12), rgba(232, 205, 150, .75), rgba(232, 205, 150, .12));
+}
+#breakPopup button {
+  border: 1px solid rgba(232, 218, 188, .38);
+  border-radius: 18px;
+  padding: 8px 20px;
+  color: #f2ead9;
+  background: rgba(229, 214, 184, .12);
+  cursor: pointer;
+  transition: background .2s ease, transform .2s ease;
+}
+#breakPopup button:hover { background: rgba(229, 214, 184, .23); transform: translateY(-1px); }
+#closeBreak { color: #dfc895; opacity: .85; }
+#breakOverlay {
+  background: radial-gradient(ellipse at center, rgba(50, 53, 48, .74), rgba(16, 19, 20, .88));
+}
+#countdown { color: #ead8b5; text-shadow: 0 0 28px rgba(222, 195, 139, .22); }
+/* Centered, brief 20-second reminder with a soft arrival. */
+#breakPopup {
+  top: 50%; left: 50%; right: auto;
+  width: min(380px, calc(100vw - 36px));
+  box-sizing: border-box;
+  transform: translate(-50%, -50%);
+  animation: gentlePop .28s ease both;
+  border-color: rgba(232, 218, 188, .48);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .52), inset 0 1px 0 rgba(255, 255, 255, .12);
+}
+@keyframes gentlePop {
+  from { opacity: 0; transform: translate(-50%, -46%) scale(.96); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+#breakPopup button {
+  min-height: 42px;
+  color: #1e2724;
+  background: #d2c39f;
+  border-color: #e4d4af;
+  font-weight: 600;
+}
+#breakPopup button:hover { background: #e4d4af; }
+@media (max-width: 500px) { #breakPopup { padding: 18px; } }

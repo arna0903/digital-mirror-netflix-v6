@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Digital Mirror Netflix V6</title>
+
+<link rel="stylesheet" href="netflix.css">
+
+</head>
+<body>
+<div id="breakOverlay" role="dialog" aria-modal="true" aria-labelledby="breakPromptText">
+  <div class="break-rest-card">
+    <div id="countdown" role="timer" aria-live="off" tabindex="-1">20</div>
+    <p id="breakPromptText" aria-live="polite">Let your eyes rest. The episode will wait.</p>
+    <button id="resumeAfterBreak" type="button" onclick="finishBreak()" hidden>Continue when you’re ready</button>
+  </div>
+</div>
+
+
+<div class="container">
+
+
+<h1 class="logo">NETFLIX</h1>
+
+
+<div class="video-container">
+
+
+<video id="video" preload="auto" playsinline>
+
+<source id="videoSource" src="assets/episode1.mp4" type="video/mp4">
+
+</video>
+
+
+
+<div class="controls">
+
+<button class="control-btn" onclick="skip(-10)">
+↶ <span>10</span>
+</button>
+
+
+<button class="play-btn" onclick="playPause()">
+▶
+</button>
+
+
+<button class="control-btn" onclick="skip(10)">
+<span>10</span> ↷
+</button>
+
+
+<div class="progress">
+
+<div id="bar"></div>
+
+</div>
+
+
+<span id="time">
+00:00 / 00:00
+</span>
+
+
+</div>
+
+</div>
+
+
+
+<h2 id="episode">
+Episode 1
+</h2>
+<div id="recoveryToast" class="recovery-toast" role="status" hidden></div>
+
+
+
+
+<!-- 20-20-20 -->
+<div id="breakPopup">
+
+<span id="closeBreak" onclick="closeBreak()">✕</span>
+
+<strong class="break-title">A quiet moment away from the screen.</strong>
+
+<br><br>
+
+20 minutes of viewing completed.
+
+<br>
+
+Look away for 20 seconds?
+
+<br><br>
+
+<button onclick="startBreak()">
+Start
+</button>
+
+</div>
+
+
+
+
+
+<!-- autoplay friction -->
+
+
+<div id="reflection">
+
+
+<img src="../mirror/assets/bear.png">
+
+
+<span id="stageBadge" class="stage-badge" role="status">Stage 1 · Daylight</span>
+<h2>A moment between episodes</h2>
+
+
+<p id="message"></p>
+<div class="strain-meter">
+  <div class="strain-meter-label"><span>Session strain</span><span id="strainValue">0%</span></div>
+  <div id="strainTrack" class="strain-track" role="meter" aria-label="Session strain" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="0 percent session strain">
+    <div id="strainFill" class="strain-fill"></div>
+  </div>
+</div>
+
+
+<button class="sound-toggle" id="ambientToggle" type="button" onclick="toggleAmbientSound()" aria-pressed="true">Ambient sound · On</button>
+<button class="primary-action" onclick="continueWatching()">
+Continue Watching
+</button>
+
+
+<button class="secondary-action" onclick="stopWatching()">
+Take a Break
+</button>
+
+
+</div>
+
+
+
+
+</div>
+
+
+<script src="netflix.js"></script>
+
+<!-- mirror bear (added) -->
+<link rel="stylesheet" href="../mirror/mirror.css">
+<div id="mirrorStage"></div>
+<script src="../mirror/p5.min.js"></script>
+<script src="../mirror/sketch%20(2).js"></script>
+<script src="../mirror/bridge%20(1).js"></script>
+
+
+</body>
+
+
+</html>

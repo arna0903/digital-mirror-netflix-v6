@@ -1,0 +1,154 @@
+/* Mirror bear layer. Everything is scoped to body.mirror-on, so removing the class restores the original page. */
+#mirrorStage { display: none; position: fixed; inset: 0; z-index: 30; background: #000; }
+#mirrorStage canvas { display: block; }
+body.mirror-on #reflection {
+  z-index: 40; top: 6vh; left: 4vw; right: auto; margin: 0; width: min(350px, 31vw); box-sizing: border-box;
+  padding: 18px 22px; text-align: left; color: #f1ebe0; font-family: Georgia, serif;
+  background: rgba(18, 18, 22, .38); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, .12);
+}
+body.mirror-on #reflection img { display: none; }
+body.mirror-on #reflection h2 { font-size: 16px; font-weight: normal; opacity: .7; margin: 0 0 8px; }
+body.mirror-on #reflection p { font-size: 17px; line-height: 1.6; margin: 0 0 14px; white-space: pre-line; }
+body.mirror-on #reflection button {
+  margin: 0 6px 8px 0; padding: 8px 18px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, .25);
+  background: rgba(255, 255, 255, .08); color: inherit; font: inherit; font-size: 14px; cursor: pointer;
+}
+body.mirror-on #reflection button:hover { background: rgba(255, 255, 255, .18); }
+
+@media (max-width: 700px) {
+  body.mirror-on #reflection { top: 12px; left: 12px; width: min(330px, calc(100vw - 24px)); padding: 14px 16px; }
+  body.mirror-on #reflection p { font-size: 15px; line-height: 1.45; }
+}
+
+.stage-badge {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0 8px;
+  padding: 5px 10px;
+  border: 1px solid rgba(232, 218, 188, .22);
+  border-radius: 999px;
+  color: #e9d7b2;
+  background: rgba(22, 27, 27, .35);
+  font: 11px/1.2 Arial, sans-serif;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+body.mirror-on #reflection .recovery-note {
+  margin: 0 0 14px;
+  padding-left: 10px;
+  border-left: 2px solid rgba(226, 207, 165, .55);
+  color: #e4d9c5;
+  font-size: 14px;
+  opacity: .9;
+}
+body.mirror-on #reflection .recovery-note[hidden] { display: none; }
+body.mirror-on #reflection button.primary-action { border-color: rgba(235, 216, 176, .45); background: rgba(229, 214, 184, .17); }
+body.mirror-on #reflection button.secondary-action { background: transparent; }
+body.mirror-on #reflection button.sound-toggle { font-size: 12px; opacity: .82; }
+
+#breakOverlay { padding: 20px; box-sizing: border-box; }
+.break-rest-card {
+  width: min(430px, 92vw);
+  padding: 34px 30px 28px;
+  box-sizing: border-box;
+  text-align: center;
+  color: #f1eadc;
+  background: linear-gradient(150deg, rgba(61, 66, 60, .96), rgba(31, 39, 40, .97));
+  border: 1px solid rgba(229, 214, 184, .28);
+  border-radius: 26px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .42), inset 0 1px 0 rgba(255, 255, 255, .08);
+  backdrop-filter: blur(18px);
+}
+#countdown {
+  display: grid;
+  place-items: center;
+  width: 112px;
+  height: 112px;
+  margin: 0 auto 18px;
+  border: 1px solid rgba(229, 214, 184, .32);
+  border-radius: 50%;
+  color: #ead8b5;
+  font: 500 54px/1 Georgia, serif;
+  text-shadow: 0 0 28px rgba(222, 195, 139, .22);
+}
+#breakPromptText { margin: 0 auto 22px; color: #e9e2d5; font: 17px/1.55 Georgia, serif; max-width: 330px; }
+#resumeAfterBreak {
+  min-height: 42px;
+  padding: 9px 20px;
+  border: 1px solid rgba(232, 218, 188, .38);
+  border-radius: 22px;
+  color: #f2ead9;
+  background: rgba(229, 214, 184, .13);
+  font: 14px Georgia, serif;
+  cursor: pointer;
+  transition: background .2s ease, transform .2s ease;
+}
+#resumeAfterBreak:hover { background: rgba(229, 214, 184, .24); transform: translateY(-1px); }
+#resumeAfterBreak[hidden] { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+.stage-badge { gap: 7px; }
+.stage-badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #b9c9a7; box-shadow: 0 0 10px rgba(185, 201, 167, .4); }
+.stage-badge[data-stage="2"]::before { background: #d9bb7b; box-shadow: 0 0 10px rgba(217, 187, 123, .4); }
+.stage-badge[data-stage="3"]::before { background: #c46e68; box-shadow: 0 0 10px rgba(196, 110, 104, .4); }
+
+.recovery-toast {
+  position: fixed; top: 88px; left: 40px; z-index: 25; max-width: min(340px, 72vw);
+  padding: 12px 16px; border: 1px solid rgba(229, 214, 184, .25); border-radius: 14px;
+  color: #f1eadc; background: rgba(38, 45, 44, .78); backdrop-filter: blur(12px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .2); font: 14px/1.45 Georgia, serif;
+}
+.recovery-toast[hidden] { display: none; }
+
+.strain-meter { margin: 0 0 15px; }
+.strain-meter-label { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; color: #e8dfcf; font: 12px/1.3 Arial, sans-serif; letter-spacing: .04em; }
+.strain-track { height: 8px; overflow: hidden; border: 1px solid rgba(232, 218, 188, .20); border-radius: 999px; background: rgba(10, 14, 15, .55); }
+.strain-fill { width: 0%; height: 100%; border-radius: inherit; background: #a9b899; transition: width .7s ease, background-color .4s ease; }
+.strain-track[data-stage="2"] .strain-fill { background: #d0b274; }
+.strain-track[data-stage="3"] .strain-fill { background: #bf7770; }
+
+/* Stronger reflection hierarchy while keeping both choices gentle and voluntary. */
+body.mirror-on #reflection {
+  width: min(390px, 34vw);
+  padding: 22px 24px;
+  background: rgba(16, 20, 22, .72);
+  border-color: rgba(232, 218, 188, .32);
+  box-shadow: 0 18px 56px rgba(0, 0, 0, .34), inset 0 1px 0 rgba(255, 255, 255, .08);
+}
+body.mirror-on #reflection h2 { font-size: 18px; line-height: 1.35; opacity: 1; color: #f4ead7; }
+body.mirror-on #reflection p { font-size: 18px; line-height: 1.55; color: #fffaf0; }
+body.mirror-on #reflection .stage-badge { font-size: 12px; letter-spacing: .14em; }
+body.mirror-on #reflection .strain-meter { margin: 4px 0 18px; }
+body.mirror-on #reflection .strain-meter-label { font-size: 13px; color: #f4ead7; }
+body.mirror-on #reflection .strain-track { height: 12px; border-color: rgba(244, 234, 215, .35); box-shadow: 0 0 14px rgba(208, 178, 116, .14); }
+body.mirror-on #reflection .strain-fill { box-shadow: 0 0 12px currentColor; }
+body.mirror-on #reflection button {
+  min-height: 42px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 15px;
+  transition: background .2s ease, border-color .2s ease, transform .2s ease;
+}
+body.mirror-on #reflection button.primary-action {
+  color: #1e2724;
+  border-color: #d2c39f;
+  background: #d2c39f;
+  font-weight: 600;
+}
+body.mirror-on #reflection button.primary-action:hover { background: #e4d4af; transform: translateY(-1px); }
+body.mirror-on #reflection button.secondary-action {
+  color: #f5e8d0;
+  border-color: rgba(226, 207, 165, .52);
+  background: rgba(226, 207, 165, .12);
+}
+body.mirror-on #reflection button.secondary-action:hover { background: rgba(226, 207, 165, .24); transform: translateY(-1px); }
+body.mirror-on #reflection button.sound-toggle { min-height: 36px; color: #e7ddc9; border-color: rgba(232, 218, 188, .24); }
+@media (max-width: 700px) {
+  body.mirror-on #reflection { width: min(390px, calc(100vw - 24px)); }
+  body.mirror-on #reflection p { font-size: 16px; }
+}
+
+
+/* The room and bear respond more clearly as the strain meter rises. */

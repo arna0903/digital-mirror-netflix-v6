@@ -1,0 +1,20 @@
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #141414;   /* Netflix-like */
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+button {
+    background: #e50914;
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 5px;
+    font-size: 18px;
+}
