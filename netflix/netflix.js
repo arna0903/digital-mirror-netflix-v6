@@ -76,7 +76,7 @@ function updateAmbientAudio() {
   if (ambientContext && ambientMaster) {
     const now = ambientContext.currentTime;
     ambientMaster.gain.cancelScheduledValues(now);
-    ambientMaster.gain.setTargetAtTime(ambientSoundEnabled && ambientSceneActive ? 0.42 : 0.0001, now, 1.1);
+    ambientMaster.gain.setTargetAtTime(ambientSoundEnabled && ambientSceneActive ? 0.65 : 0.0001, now, 1.1);
   }
 }
 
@@ -89,7 +89,7 @@ function playAmbientNote() {
   osc.type = "sine";
   osc.frequency.value = notes[ambientNoteIndex++ % notes.length];
   level.gain.setValueAtTime(0.0001, now);
-  level.gain.exponentialRampToValueAtTime(0.030, now + 0.55);
+  level.gain.exponentialRampToValueAtTime(0.045, now + 0.55);
   level.gain.exponentialRampToValueAtTime(0.0001, now + 4.8);
   osc.connect(level);
   level.connect(ambientFilter);
@@ -253,7 +253,7 @@ function playBreakChime(){
   const gain = ambientContext.createGain();
   osc.type = "sine"; osc.frequency.setValueAtTime(740, now);
   gain.gain.setValueAtTime(0.0001, now);
-  gain.gain.exponentialRampToValueAtTime(0.045, now + 0.025);
+  gain.gain.exponentialRampToValueAtTime(0.08, now + 0.025);
   gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.75);
   osc.connect(gain); gain.connect(ambientContext.destination);
   osc.start(now); osc.stop(now + 0.8);
