@@ -14,16 +14,36 @@ let time =
 document.getElementById("time");
 
 
+// Current episode number; episode 4 is intentionally a blank-screen demo.
 let episode =
 1;
 let demoBlankScreen=false;
+// Simulated clock begins at the viewer's local time and advances only during active playback.
+const simulatedClockStart = new Date();
+let simulatedElapsedMinutes = 0;
+
+function formatSimulatedClock(date) {
+  return date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+}
+
+function getSimulatedClockMessage() {
+  const simulatedNow = new Date(simulatedClockStart.getTime() + simulatedElapsedMinutes * 60 * 1000);
+  const elapsedHours = Math.floor(simulatedElapsedMinutes / 60);
+  const elapsedMinutes = simulatedElapsedMinutes % 60;
+  const elapsedLabel = elapsedHours
+    ? `${elapsedHours} hr${elapsedHours === 1 ? "" : "s"}${elapsedMinutes ? ` ${elapsedMinutes} min` : ""}`
+    : `${elapsedMinutes} min`;
+  return `Simulated viewing time: ${formatSimulatedClock(simulatedClockStart)} → ${formatSimulatedClock(simulatedNow)} (${elapsedLabel})`;
+}
 
 
+// Prevent multiple 20-minute reminders from opening at the same time.
 let breakShown=false;
 
 
 
-// play pause
+// The player controls and ambient synth are created from the page elements below.
+// Audio starts on a user gesture because browsers restrict automatic audio playback.
 
 let playButton=document.querySelector(".play-btn");
 let ambientContext = null;
@@ -36,6 +56,7 @@ let ambientSceneActive = false;
 let ambientNoteTimer = null;
 let ambientNoteIndex = 0;
 
+// Create the Web Audio nodes once, then reuse them for the scene ambience and reminder chime.
 function ensureAmbientAudio() {
   const AudioContextClass = window.AudioContext || window.webkitAudioContext;
   if (!AudioContextClass) return false;
@@ -67,6 +88,7 @@ function ensureAmbientAudio() {
   return true;
 }
 
+// Fade the generated sound in only while the reflection scene is active and sound is enabled.
 function updateAmbientAudio() {
   const button = document.getElementById("ambientToggle");
   if (button) {
@@ -80,6 +102,7 @@ function updateAmbientAudio() {
   }
 }
 
+// Play one soft sine note with a slow attack and release to avoid a sharp alert-like sound.
 function playAmbientNote() {
   if (!ambientContext || !ambientSoundEnabled || !ambientSceneActive) return;
   const notes = [392.00, 329.63, 440.00, 349.23, 392.00, 293.66];
@@ -97,6 +120,7 @@ function playAmbientNote() {
   osc.stop(now + 4.9);
 }
 
+// The bear bridge calls this when it shows or hides the reflection scene.
 function setAmbientScene(active) {
   ambientSceneActive = active;
   if (active) {
@@ -112,6 +136,7 @@ function setAmbientScene(active) {
   updateAmbientAudio();
 }
 
+// Save the viewer's sound preference in this browser.
 function toggleAmbientSound() {
   ambientSoundEnabled = !ambientSoundEnabled;
   try { localStorage.setItem("ambientSoundV6", ambientSoundEnabled ? "on" : "off"); } catch (e) {}
@@ -146,7 +171,7 @@ playButton.innerHTML="▶";
 
 
 
-// skip
+// Skip controls are disabled for the blank-screen demo and before video metadata loads.
 
 function skip(seconds){
 if(demoBlankScreen || !Number.isFinite(video.duration)) return;
@@ -157,7 +182,7 @@ video.currentTime += seconds;
 
 
 
-// progress bar
+// Refresh the progress bar and elapsed / total time from the video playback clock.
 
 video.addEventListener(
 "timeupdate",
@@ -188,6 +213,7 @@ format(video.duration);
 
 
 
+// Convert a numeric playback time into the mm:ss label used by the player.
 function format(seconds){
 
 if(isNaN(seconds))
@@ -223,7 +249,8 @@ sec<10?"0":""
 
 
 
-// 20-20-20 timer simulation
+// Accelerated reminder clock: each real playback second adds 2 simulated viewing minutes.
+// Therefore the 20-minute reminder appears after about 10 seconds of uninterrupted playback.
 
 
 let watchedMinutes=0;
@@ -235,12 +262,14 @@ setInterval(()=>{
 
   // The demo maps 30 seconds of playback to about one viewing hour.
   watchedMinutes += 2;
+  simulatedElapsedMinutes += 2;
   if(watchedMinutes >= reminderMinutes && !breakShown){
     watchedMinutes -= reminderMinutes;
     showBreak();
   }
 },1000);
 
+// A short 740 Hz sine tone marks the optional reminder without using an audio library.
 function playBreakChime(){
   if (!ambientSoundEnabled) return;
   const AudioContextClass = window.AudioContext || window.webkitAudioContext;
@@ -259,6 +288,7 @@ function playBreakChime(){
   osc.start(now); osc.stop(now + 0.8);
 }
 
+// Show the small optional prompt; if ignored, it disappears after five seconds.
 function showBreak(){
   breakShown=true;
   playBreakChime();
@@ -286,6 +316,7 @@ breakShown=false;
 
 
 
+// Starting the break pauses the episode and runs the 20-second eye-rest timer.
 function startBreak(){
 document.getElementById("breakPopup").style.display="none";
 breakShown=true;
@@ -317,6 +348,7 @@ const timer=setInterval(()=>{
 },1000);
 }
 
+// Resume only after the viewer chooses the button shown when the 20 seconds are complete.
 function finishBreak(){
 document.getElementById("breakOverlay").style.display="none";
 document.getElementById("resumeAfterBreak").hidden=true;
@@ -342,7 +374,7 @@ breakShown=false;
 
 
 
-// REAL autoplay friction
+// End-of-episode reflection: offer a moment of choice before the next episode starts.
 
 video.onended=function(){
 const popup = document.getElementById("breakPopup");
@@ -355,6 +387,7 @@ showReflection();
 
 
 
+// Choose a progressively more reflective message based on how many episodes have ended.
 function showReflection(){
 let text="";
 
@@ -394,6 +427,8 @@ Perhaps you need a moment away from the screen.
 
 }
 
+text += `\n\n${getSimulatedClockMessage()}`;
+
 
 
 document.getElementById(
@@ -412,8 +447,10 @@ document.getElementById(
 
 
 
+// The viewer may continue; after episode 3, continue leads to a blank screen for demonstration.
 function continueWatching(){
 if(episode>=3){
+// End the demo with a clear label instead of implying that a fourth episode exists.
 episode=4;
 demoBlankScreen=true;
 video.pause();
@@ -436,6 +473,7 @@ playButton.innerHTML="❚❚";
 document.getElementById("episode").innerHTML="Episode "+episode;
 document.getElementById("reflection").style.display="none";
 }
+// Stop the current video without closing the application or imposing a session limit.
 function stopWatching(){
 
 
@@ -449,6 +487,7 @@ document.getElementById(
 
 
 }
+// Clicking the progress track seeks to that position in the current video.
 document.querySelector(".progress")
 .addEventListener("click",function(e){
 
