@@ -18,9 +18,10 @@ document.getElementById("time");
 let episode =
 1;
 let demoBlankScreen=false;
-// Simulated clock begins at the viewer's local time and advances only during active playback.
-const simulatedClockStart = new Date();
-let simulatedElapsedMinutes = 0;
+// A ?load= value represents prior simulated viewing, so include it in the visible session clock.
+const simulatedStartingLoad = Math.max(0, Number(new URLSearchParams(location.search).get("load")) || 0);
+const simulatedClockStart = new Date(Date.now() - simulatedStartingLoad * 60 * 1000);
+let simulatedElapsedMinutes = simulatedStartingLoad;
 
 function formatSimulatedClock(date) {
   return date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
@@ -35,6 +36,13 @@ function getSimulatedClockMessage() {
     : `${elapsedMinutes} min`;
   return `Simulated viewing time: ${formatSimulatedClock(simulatedClockStart)} → ${formatSimulatedClock(simulatedNow)} (${elapsedLabel})`;
 }
+
+function updateSimulatedSessionClock() {
+  const clock = document.getElementById("sessionClock");
+  if (clock) clock.textContent = getSimulatedClockMessage();
+}
+
+updateSimulatedSessionClock();
 
 
 // Prevent multiple 20-minute reminders from opening at the same time.
@@ -263,6 +271,7 @@ setInterval(()=>{
   // The demo maps 30 seconds of playback to about one viewing hour.
   watchedMinutes += 2;
   simulatedElapsedMinutes += 2;
+  updateSimulatedSessionClock();
   if(watchedMinutes >= reminderMinutes && !breakShown){
     watchedMinutes -= reminderMinutes;
     showBreak();
@@ -427,7 +436,13 @@ Perhaps you need a moment away from the screen.
 
 }
 
-text += `\n\n${getSimulatedClockMessage()}`;
+const simulatedTotalMinutes = simulatedStartingLoad + episode * 60;
+const simulatedTotalHours = Math.floor(simulatedTotalMinutes / 60);
+const simulatedRemainderMinutes = simulatedTotalMinutes % 60;
+const simulatedTotalLabel = simulatedTotalHours
+  ? `${simulatedTotalHours} hr${simulatedTotalHours === 1 ? "" : "s"}${simulatedRemainderMinutes ? ` ${simulatedRemainderMinutes} min` : ""}`
+  : `${simulatedRemainderMinutes} min`;
+text += `\n\nSimulated viewing total: ${simulatedTotalLabel} (${simulatedStartingLoad} min prior load + 60 min for each completed episode).`;
 
 
 
