@@ -407,9 +407,7 @@ Perhaps you need a moment away from the screen.
 
 }
 
-document.getElementById("message").innerText=text;document.getElementById("message").innerText+="
-
-"+getSimulatedClockMessage();
+document.getElementById("message").innerText=text+" | "+getSimulatedClockMessage();
 
 
 
