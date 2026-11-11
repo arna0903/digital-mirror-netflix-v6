@@ -17,7 +17,7 @@ document.getElementById("time");
 // Current episode number; episode 4 is intentionally a blank-screen demo.
 let episode =
 1;
-let demoBlankScreen=false;
+let demoBlankScreen=false; let simulatedClockStart=new Date(),simulatedElapsedMinutes=0; function getSimulatedClockMessage(){const n=new Date(simulatedClockStart.getTime()+simulatedElapsedMinutes*60000),h=Math.floor(simulatedElapsedMinutes/60),m=simulatedElapsedMinutes%60,e=h?(h+" hr"+(h===1?"":"s")+(m?" "+m+" min":"")):(m+" min"),f=function(d){return d.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})};return "Simulated viewing time: "+f(simulatedClockStart)+" → "+f(n)+" ("+e+")";}
 // Prevent multiple 20-minute reminders from opening at the same time.
 let breakShown=false;
 
@@ -242,7 +242,7 @@ setInterval(()=>{
   if(video.paused || video.ended || reflectionOpen || document.visibilityState === "hidden") return;
 
   // The demo maps 30 seconds of playback to about one viewing hour.
-  watchedMinutes += 2;
+  watchedMinutes += 2; simulatedElapsedMinutes += 2;
   if(watchedMinutes >= reminderMinutes && !breakShown){
     watchedMinutes -= reminderMinutes;
     showBreak();
@@ -407,9 +407,11 @@ Perhaps you need a moment away from the screen.
 
 }
 
-document.getElementById(
-"message"
-).innerText=text;
+document.getElementById("message").innerText=text;document.getElementById("message").innerText+="
+
+"+getSimulatedClockMessage();document.getElementById("message").innerText+="
+
+"+getSimulatedClockMessage();
 
 
 
